@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download HD Pictures</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            user-select: none; /* Disable text selection to improve touch swipe experience */
+        }
+        .movie-images img {
+            width: 200px;
+            margin: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+        }
+        .image-viewer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .image-viewer img {
+            max-width: 90%;
+            max-height: 80%;
+        }
+        .close-viewer, .prev, .next, .download-btn {
+            position: absolute;
+            color: white;
+            font-size: 24px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            cursor: pointer;
+        }
+        .close-viewer {
+            top: 10px;
+            right: 10px;
+        }
+        .prev {
+            left: 10px;
+            top: 50%;
+        }
+        .next {
+            right: 10px;
+            top: 50%;
+        }
+        .download-btn {
+            bottom: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="nav-buttons">
+    <button onclick="window.location.href='index.html'">Home</button>
+    <button onclick="window.location.href='mailto:maheshchowdaryraavi04@gmail.com'">Contact Us</button>
+</div>
+
+<h1 id="movieTitle">Movie Title</h1>
+<div class="movie-images" id="movieImages">
+    <!-- Images will be populated here -->
+</div>
+
+<button onclick="goBack()">Back</button>
+
+<!-- Full Image Viewer -->
+<div class="image-viewer" id="imageViewer">
+    <span class="close-viewer" onclick="closeImageViewer()">×</span>
+    <img id="fullImage" src="" alt="">
+    <span class="prev" onclick="prevImage()">←</span>
+    <span class="next" onclick="nextImage()">→</span>
+    <a id="downloadLink" class="download-btn" href="" download>Download</a>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const movie = urlParams.get('movie');
+    document.getElementById('movieTitle').innerText = movie;
+
+    const images = {
+        'Ninnu Choodalani': [' Ninnu_Choodalani_HD1.jpg ' , ' Ninnu_Choodalani_HD10.jpg ' ,' Ninnu_Choodalani_HD11.jpg ' , 'Ninnu_Choodalani_HD12.jpg ', ' Ninnu_Choodalani_HD13.jpg ' , ' Ninnu_Choodalani_HD14.jpg ' , ' Ninnu_Choodalani_HD15.jpg ' , ' Ninnu_Choodalani_HD16.jpg ' ,' Ninnu_Choodalani_HD17.jpg ' , ' Ninnu_Choodalani_HD18.jpg '  , ' Ninnu_Choodalani_HD19.JPG ' , ' Ninnu_Choodalani_HD2.JPG ' , ' Ninnu_Choodalani_HD20.JPG ' , ' Ninnu_Choodalani_HD21.JPG ' , ' Ninnu_Choodalani_HD3.JPG ' , ' Ninnu_Choodalani_HD4.jpg ' , ' Ninnu_Choodalani_HD5.jpg ' , ' Ninnu_Choodalani_HD6.jpg ' , ' Ninnu_Choodalani_HD7.jpg ' , ' Ninnu_Choodalani_HD8.jpg ' , ' Ninnu_Choodalani_HD9.jpg '],
+        'StudentNo1': [' Studen_No1_HD_002.png  ', ' Studen_No1_HD_003.png  ', ' Studen_No1_HD_004.png  ', ' Studen_No1_HD_005.png  ', ' Studen_No1_HD_006.png  ', ' Studen_No1_HD_007.png  ', ' Studen_No1_HD_008.png  ', ' Studen_No1_HD_009.png  ', ' Studen_No1_HD_010.png  ', ' Studen_No1_HD_011.png  ', ' Studen_No1_HD_012.png  ', ' Studen_No1_HD_013.jpg  ', ' Studen_No1_HD_014.jpg  ', ' Studen_No1_HD_015.jpg  ', ' Studen_No1_HD_016.jpg  ', ' Studen_No1_HD_017.jpg  ', ' Studen_No1_HD_018.jpg  ', ' Studen_No1_HD_019.jpg  ', ' Studen_No1_HD_020.jpg  ', ' Studen_No1_HD_021.jpg  ', ' Studen_No1_HD_022.jpg  ', ' Studen_No1_HD_023.png  ', ' Studen_No1_HD_024.jpg  ', ' Studen_No1_HD_025.jpg  ', ' Studen_No1_HD_026.jpg  ', ' Studen_No1_HD_027.jpg  ', ' Studen_No1_HD_028.jpg  ', ' Studen_No1_HD_029.jpg  ', ' Studen_No1_HD_030.jpg  ', ' Studen_No1_HD_031.jpg  ', ' Studen_No1_HD_032.png  ', ' Studen_No1_HD_033.png  ', ' Studen_No1_HD_034.png  ', ' Studen_No1_HD_035.png  ', ' Studen_No1_HD_036.png  ', ' Studen_No1_HD_037.png  ', ' Studen_No1_HD_038.jpg  ', ' Studen_No1_HD_039.jpg  ', ' Studen_No1_HD_040.jpg  ', ' Studen_No1_HD_041.jpg  ', ' Studen_No1_HD_042.jpg  ', ' Studen_No1_HD_043.jpg  ', ' Studen_No1_HD_044.jpg  ', ' Studen_No1_HD_045.jpg  ', ' Studen_No1_HD_046.jpg  ', ' Studen_No1_HD_047.jpg  ', ' Studen_No1_HD_048.jpg  ', ' Studen_No1_HD_049.jpg  ', ' Studen_No1_HD_050.jpg  ', ' Studen_No1_HD_051.jpg  ', ' Studen_No1_HD_052.jpg  ', ' Studen_No1_HD_053.jpg  '], // Fixed key name
+        'Subbu': ['Subbu_HD1.jpg ', 'Subbu_HD10.jpg ', 'Subbu_HD11.jpg ', 'Subbu_HD12.jpg ', 'Subbu_HD13.jpg ', 'Subbu_HD14.jpg ', 'Subbu_HD15.jpg ', 'Subbu_HD16.jpg ', 'Subbu_HD17.jpg ', 'Subbu_HD18.jpg ', 'Subbu_HD19.jpg ', 'Subbu_HD2.jpg ', 'Subbu_HD20.jpg ', 'Subbu_HD21.jpg ', 'Subbu_HD22.jpg ', 'Subbu_HD23.JPG ', 'Subbu_HD3.jpg ', 'Subbu_HD4.jpg ', 'Subbu_HD5.jpg ', 'Subbu_HD6.jpg ', 'Subbu_HD7.jpg ', 'Subbu_HD8.jpg ', 'Subbu_HD9.jpg '],
+        'Aadi': [' Aadi_001.jpg ' , ' Aadi_002.jpg ' , ' Aadi_003.jpg ' , ' Aadi_004.jpg ' , ' Aadi_005.jpg ' , ' Aadi_006.jpg ' , ' Aadi_007.jpg ' , ' Aadi_008.jpg ' , ' Aadi_009.jpg ' , ' Aadi_010.jpg ' , ' Aadi_011.jpg ' , ' Aadi_012.jpg ' , ' Aadi_013.jpg ' , ' Aadi_014.jpg ' , ' Aadi_015.jpg ' , ' Aadi_016.jpg ' , ' Aadi_017.jpg ' , ' Aadi_018.jpg ' , ' Aadi_019.jpg ' , ' Aadi_020.jpg ' , ' Aadi_021.jpg ' , ' Aadi_022.jpg ' , ' Aadi_023.jpg ' , ' Aadi_024.jpg ' , ' Aadi_025.jpg ' , ' Aadi_026.jpg ' , ' Aadi_027.jpg ' , ' Aadi_028.jpg ' , ' Aadi_029.jpg ' , ' Aadi_030.jpg ' , ' Aadi_031.jpg ' , ' Aadi_032.jpg ' , ' Aadi_033.jpg ' , ' Aadi_034.jpg ' , ' Aadi_035.jpg ' , ' Aadi_036.jpg ' , ' Aadi_037.jpg ' , ' Aadi_038.jpg ' , ' Aadi_039.jpg ' , ' Aadi_040.jpg ' , ' Aadi_041.jpg ' , ' Aadi_042.jpg ' , ' Aadi_043.jpg ' , ' Aadi_044.jpg ' , ' Aadi_045.jpg ' , ' Aadi_046.jpg ' , ' Aadi_047.jpg ' , ' Aadi_048.jpg ' , ' Aadi_049.jpg ' , ' Aadi_050.jpg ' , ' Aadi_051.jpg ' , ' Aadi_052.jpg ' , ' Aadi_053.jpg ' , ' Aadi_054.jpg ' , ' Aadi_055.jpg ' , ' Aadi_056.jpg ' , ' Aadi_057.jpg ' , ' Aadi_058.jpg ' , ' Aadi_059.jpg ' , ' Aadi_060.jpg ' , ' Aadi_061.jpg ' , ' Aadi_062.jpg ' , ' Aadi_063.jpg ' , ' Aadi_064.jpg ' , ' Aadi_065.jpg ' , ' Aadi_066.jpg ' , ' Aadi_067.jpg ' , ' Aadi_068.jpg ' , ' Aadi_069.jpg ' , ' Aadi_070.jpg ' , ' Aadi_071.jpg ' , ' Aadi_072.jpg ' , ' Aadi_073.jpg ' , ' Aadi_074.jpg ' , ' Aadi_075.jpg ' ],
+        'Allari Ramudu': ['AllariRamudu_001.jpg',' AllariRamudu_002.jpg ', ' AllariRamudu_003.jpg ', ' AllariRamudu_004.jpg ', ' AllariRamudu_005.jpg ', ' AllariRamudu_006.jpg ', ' AllariRamudu_007.jpg ', ' AllariRamudu_008.jpg ', ' AllariRamudu_009.jpg ', ' AllariRamudu_010.jpg ', ' AllariRamudu_011.jpg ', ' AllariRamudu_012.jpg ', ' AllariRamudu_013.jpg ', ' AllariRamudu_014.jpg ', ' AllariRamudu_015.jpg ', ' AllariRamudu_016.jpg ', ' AllariRamudu_017.jpg ', ' AllariRamudu_018.jpg ', ' AllariRamudu_019.jpg ', ' AllariRamudu_020.jpg ', ' AllariRamudu_021.jpg ', ' AllariRamudu_022.jpg ', ' AllariRamudu_023.jpg ', ' AllariRamudu_024.jpg ', ' AllariRamudu_025.jpg ', ' AllariRamudu_026.jpg ', ' AllariRamudu_027.jpg ', ' AllariRamudu_028.jpg ', ' AllariRamudu_029.jpg ', ' AllariRamudu_030.jpg ', ' AllariRamudu_031.jpg ', ' AllariRamudu_032.jpg ', ' AllariRamudu_033.jpg ', ' AllariRamudu_034.jpg ', ' AllariRamudu_035.jpg ', ' AllariRamudu_036.jpg ', ' AllariRamudu_037.jpg ', ' AllariRamudu_038.jpg ', ' AllariRamudu_039.jpg ', ' AllariRamudu_040.jpg ', ' AllariRamudu_041.jpg ', ' AllariRamudu_042.jpg '],
+        'Naaga': [' Naaga1.jpg ', ' Naaga10.jpg ', ' Naaga11.jpg ', ' Naaga12.jpg ', ' Naaga13.jpg ', ' Naaga14.JPG ', ' Naaga15.JPG ', ' Naaga2.jpg ', ' Naaga3.jpg ', ' Naaga4.jpg ', ' Naaga5.jpg ', ' Naaga6.jpg ', ' Naaga7.jpg ', ' Naaga8.jpg ', ' Naaga9.jpg '],
+        'Simhadri': ['Simhadri_HD1.jpg', 'Simhadri_HD2.jpg'],
+        'Andhrawala': ['Andhrawala_HD1.jpg', 'Andhrawala_HD2.jpg'],
+        'Samba': ['Samba_HD1.jpg', 'Samba_HD2.jpg'],
+        'Naa Alludu': ['Naa_Alludu_HD1.jpg', 'Naa_Alludu_HD2.jpg'],
+        'Narasimhudu': ['Narasimhudu_HD1.jpg', 'Narasimhudu_HD2.jpg'],
+        'Ashok': ['Ashok_HD1.jpg', 'Ashok_HD2.jpg'],
+        'Rakhi': ['Rakhi_HD1.jpg', 'Rakhi_HD2.jpg'],
+        'Yamadonga': ['Yamadonga_HD1.jpg', 'Yamadonga_HD2.jpg'],
+        'Kantri': ['Kantri_HD1.jpg', 'Kantri_HD2.jpg'],
+        'Adhurs': ['Adhurs_HD1.jpg', 'Adhurs_HD2.jpg'],
+        'Brindavanam': ['Brindavanam_HD1.jpg', 'Brindavanam_HD2.jpg'],
+        'Sakthi': ['Sakthi_HD1.jpg', 'Sakthi_HD2.jpg'],
+        'Oosaravelli': ['Oosaravelli_HD1.jpg', 'Oosaravelli_HD2.jpg'],
+        'Dammu': ['Dammu_HD1.jpg', 'Dammu_HD2.jpg'],
+        'Baadshah': ['Baadshah_HD1.jpg', 'Baadshah_HD2.jpg'],
+        'Ramayya Vasthavayya': ['Ramayya_Vasthavayya_HD1.jpg', 'Ramayya_Vasthavayya_HD2.jpg'],
+        'Rabhasa': ['Rabhasa_HD1.jpg', 'Rabhasa_HD2.jpg'],
+        'Temper': ['Temper_HD1.jpg', 'Temper_HD2.jpg'],
+        'Nannaku Prematho': ['Nannaku_Prematho_HD1.jpg', 'Nannaku_Prematho_HD2.jpg'],
+        'Janatha Garage': ['Janatha_Garage_HD1.jpg', 'Janatha_Garage_HD2.jpg'],
+        'Jai Lava Kusa': ['Jai_Lava_Kusa_HD1.jpg', 'Jai_Lava_Kusa_HD2.jpg'],
+        'Aravinda Sametha Veera Raghava': ['Aravinda_Sametha_Veera_Raghava_HD1.jpg', 'Aravinda_Sametha_Veera_Raghava_HD2.jpg'],
+        'RRR': ['RRR_HD1.jpg', 'RRR_HD2.jpg'],
+        'DevaraPart1': ['Devara_Part_1_HD1.jpg', 'Devara_Part_1_HD2.jpg'],
+        'NTR31': ['NTR31_HD1.jpg', 'NTR31_HD2.jpg'] // Fixed key name and added a second placeholder image
+    };
+
+    const movieImagesDiv = document.getElementById('movieImages');
+    let currentImageIndex = 0;
+    let currentMovieImages = [];
+
+    // Populate movie images
+    if (images[movie]) {
+        currentMovieImages = images[movie];
+        currentMovieImages.forEach((image, index) => {
+            const img = document.createElement('img');
+            img.src = image;
+            img.alt = `${movie} HD Image`;
+            img.onclick = () => openImageViewer(index);
+            movieImagesDiv.appendChild(img);
+        });
+    } else {
+        movieImagesDiv.innerHTML = '<p>No images available for this movie.</p>';
+    }
+
+    // Image viewer and navigation
+    function openImageViewer(index) {
+        currentImageIndex = index;
+        const imageViewer = document.getElementById('imageViewer');
+        const fullImage = document.getElementById('fullImage');
+        const downloadLink = document.getElementById('downloadLink');
+        
+        fullImage.src = currentMovieImages[currentImageIndex];
+        downloadLink.href = currentMovieImages[currentImageIndex];
+        imageViewer.style.display = 'flex';
+    }
+
+    function closeImageViewer() {
+        document.getElementById('imageViewer').style.display = 'none';
+    }
+
+    function nextImage() {
+        currentImageIndex++;
+        if (currentImageIndex >= currentMovieImages.length) {
+            closeImageViewer();
+        } else {
+            openImageViewer(currentImageIndex);
+        }
+    }
+
+    function prevImage() {
+        currentImageIndex--;
+        if (currentImageIndex < 0) {
+            closeImageViewer();
+        } else {
+            openImageViewer(currentImageIndex);
+        }
+    }
+
+    function goBack() {
+        window.history.back();
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (event) => {
+        if (document.getElementById('imageViewer').style.display === 'flex') {
+            if (event.key === 'ArrowRight') {
+                nextImage();
+            } else if (event.key === 'ArrowLeft') {
+                prevImage();
+            }
+        }
+    });
+
+    // Touch swipe navigation
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.getElementById('imageViewer').addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.getElementById('imageViewer').addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleGesture();
+    });
+
+    function handleGesture() {
+        if (touchEndX < touchStartX - 50) { // Swipe left
+            nextImage();
+        }
+        if (touchEndX > touchStartX + 50) { // Swipe right
+            prevImage();
+        }
+    }
+</script>
+
+</body>
+</html>
