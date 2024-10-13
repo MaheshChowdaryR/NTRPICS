@@ -1,4 +1,15 @@
+# Allow all web crawlers access to everything
 User-agent: *
 Disallow: 
 
-Sitemap: https://ntrpics.vercel.app/sitemap.xml
+# Allow specific user-agent (e.g., Googlebot) access to the sitemap
+User-agent: Googlebot
+Allow: /
+
+# Disallow specific directories or files
+User-agent: *
+Disallow: /private-directory/
+Disallow: /temporary-file.html
+
+# Specify the location of your sitemap
+Sitemap: https://example.com/sitemap.xml
