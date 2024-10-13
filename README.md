@@ -1,2 +1,2 @@
 Access the site from here
-(https://ntrpics.vercel.app/)
+(https://ntrpics.netlify.app/))
