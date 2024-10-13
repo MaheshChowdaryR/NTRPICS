@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 Disallow: /cgi-bin/
-Sitemap: https://www.xml-sitemaps.com/download/ntrpics.netlify.app-925a42ad2/sitemap.xml?view=1
+Sitemap: ntrpics.netlify.app/sitemap.xml 
